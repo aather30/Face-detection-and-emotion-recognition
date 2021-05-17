@@ -11,12 +11,13 @@ from tensorflow.keras.models import Model
 
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
-from tensorflow.python.keras.backend import binary_crossentropy
+from tensorflow.python.keras.backend import batch_dot, binary_crossentropy
 
 
 def main():
     path = "../dataset/"
-    epochs = 20
+    epochs = 50
+    batch_size = 10
     # reading the images in to a single array
     x, y = reading_images(path)
 
@@ -29,8 +30,7 @@ def main():
     y = lb.fit_transform(y)
 
     # splitting the data
-    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.2, random_state=1, shuffle=True)
-
+    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.3, random_state=1, stratify=y,shuffle=True)
     # data augmentation
     dg  = ImageDataGenerator(zoom_range=0.15, width_shift_range=0.2, height_shift_range=0.2, shear_range=0.15, fill_mode="nearest")
     
@@ -39,13 +39,9 @@ def main():
     # defining main model
     main_model = face_model.output
     main_model = AveragePooling2D(pool_size=(7, 7))(main_model)
-
     main_model = Flatten()(main_model)
-
     main_model = Dense(128, activation="relu")(main_model)
-
-    main_model = Dropout(0.5)(main_model)
-
+    main_model = Dropout(0.3)(main_model)
     main_model = Dense(len(os.listdir(path)), activation="softmax")(main_model)
 
     model = Model(inputs=face_model.input, outputs=main_model)
@@ -55,7 +51,8 @@ def main():
     
     model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-    history = model.fit(dg.flow(train_x, train_y, batch_size=10), epochs = epochs, validation_data=(test_x, test_y))
+    history = model.fit(dg.flow(train_x, train_y, batch_size=batch_size), epochs = epochs, steps_per_epoch=len(train_x) // batch_size,
+	validation_steps=len(test_x) // batch_size, validation_data=(test_x, test_y))
 
     plt.figure()
     plt.plot(np.arange(0, epochs), history.history["loss"], label="Training Loss")
@@ -72,11 +69,12 @@ def main():
 def reading_images(path):
     images = []
     image_labels = []
-    labels = [x for x in os.listdir(path)]
+    labels = [x for x in sorted(os.listdir(path))]
     for label in labels:
         for image in os.listdir(path + label + "/"):
-            images.append(preprocess_input(img_to_array(load_img(path + label + "/" + image, target_size=(224, 224)))))
-            image_labels.append(label)
+            if ".jpg" in image:
+                images.append(preprocess_input(img_to_array(load_img(path + label + "/" + image, target_size=(224, 224)))))
+                image_labels.append(label)
 
     return images, image_labels
 

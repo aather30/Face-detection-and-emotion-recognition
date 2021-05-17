@@ -10,6 +10,16 @@ face_detector = dlib.get_frontal_face_detector()
 # getting the emotions from a csv file
 emotions = pd.read_csv("../params/emotions.csv", header=None).to_numpy().flatten()
 
+# make folders for dataset and models 
+if not os.path.isdir("../dataset"):
+    os.mkdir("../dataset")
+
+if not os.path.isdir("../models"):
+    os.mkdir("../models")
+
+if ".DS_Store" in os.listdir("../dataset"):
+    os.remove("../dataset/.DS_Store")
+
 # making directories for every emotion
 for emotion in emotions:
     

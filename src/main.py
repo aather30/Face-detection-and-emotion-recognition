@@ -15,7 +15,7 @@ face_detector = dlib.get_frontal_face_detector()
 # laoding model
 model = load_model("../models/model.h5")
 
-labels = [x for x in os.listdir("../dataset/")]
+labels = [x for x in sorted(os.listdir("../dataset/"))]
 
 # starting webcam
 webcam = cv2.VideoCapture(0)
