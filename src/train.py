@@ -11,7 +11,6 @@ from tensorflow.keras.models import Model
 
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
-from tensorflow.python.keras.backend import batch_dot, binary_crossentropy
 
 
 def main():
