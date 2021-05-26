@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 def main():
     path = "../dataset/"
     epochs = 50
-    batch_size = 10
+    batch_size = 5
     # reading the images in to a single array
     x, y = reading_images(path)
 
