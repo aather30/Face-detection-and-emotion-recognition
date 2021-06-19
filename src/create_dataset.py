@@ -29,8 +29,19 @@ for emotion in emotions:
     # making a directory for every emotion
     os.mkdir("../dataset/" + emotion)
 
+# making directories for every emotion
+for emotion in emotions:
+    
+    if os.path.isdir("../params/sprites/" + emotion):
+        continue
+
+    # making a directory for every emotion
+    os.mkdir("../params/sprites/" + emotion)
+
 # starting webcam
 webcam = cv2.VideoCapture(0)
+webcam.set(3,640)
+webcam.set(4,480)
 
 emotion_path = ""   
 emotion_str = ""

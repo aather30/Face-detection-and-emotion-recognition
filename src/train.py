@@ -15,8 +15,8 @@ from sklearn.model_selection import train_test_split
 
 def main():
     path = "../dataset/"
-    epochs = 50
-    batch_size = 5
+    epochs = 30
+    batch_size = 10
     # reading the images in to a single array
     x, y = reading_images(path)
 
@@ -39,8 +39,8 @@ def main():
     main_model = face_model.output
     main_model = AveragePooling2D(pool_size=(7, 7))(main_model)
     main_model = Flatten()(main_model)
-    main_model = Dense(128, activation="relu")(main_model)
-    main_model = Dropout(0.3)(main_model)
+    main_model = Dense(64, activation="relu")(main_model)
+    #main_model = Dropout(0.2)(main_model)
     main_model = Dense(len(os.listdir(path)), activation="softmax")(main_model)
 
     model = Model(inputs=face_model.input, outputs=main_model)
@@ -68,7 +68,7 @@ def main():
 def reading_images(path):
     images = []
     image_labels = []
-    labels = [x for x in sorted(os.listdir(path))]
+    labels = [x for x in sorted(os.listdir(path)) if ".DS" not in x]
     for label in labels:
         for image in os.listdir(path + label + "/"):
             if ".jpg" in image:

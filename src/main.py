@@ -19,6 +19,8 @@ model = load_model("../models/model.h5")
 labels = [x for x in sorted(os.listdir("../dataset/"))]
 # starting webcam
 webcam = cv2.VideoCapture(0)
+webcam.set(3,640)
+webcam.set(4,480)
 
 predicted_emotion = ""
 prev_emotion = " "
@@ -133,6 +135,7 @@ def main():
             print("[ERROR] No face detected!")
         # showing the bounded image
         cv2.imshow("Sprite", show_frame)
+        cv2.imshow("Webcam", frame)
         cv2.waitKey(1)
    
 main()
