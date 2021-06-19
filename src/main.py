@@ -47,11 +47,11 @@ def animation():
     return show_im
 
    
-def detect_emotion(frame, face):
+def detect_emotion(frame):
     # creating a boundary of the face detected
-    frame = cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 255, 0), 2)
+    frame = cv2.rectangle(frame, (500, 100), (900, 500), (0, 255, 0), 2)
     
-    gray_face = cv2.cvtColor(frame[face.top():face.bottom(), face.left():face.right()], cv2.COLOR_BGR2GRAY)
+    gray_face = cv2.cvtColor(frame[100:500, 500:900], cv2.COLOR_BGR2GRAY)
 
     gray_face = cv2.cvtColor(gray_face, cv2.COLOR_GRAY2BGR)
 
@@ -60,6 +60,8 @@ def detect_emotion(frame, face):
     gray_face = np.expand_dims(gray_face, axis = 0)
 
     predicted_emotion = labels[np.argmax(model.predict(gray_face))]
+
+    cv2.putText(frame, predicted_emotion, (600, 55),cv2.FONT_HERSHEY_SIMPLEX, 2,(255,255,255), 2)
 
     return predicted_emotion
 
@@ -117,9 +119,11 @@ def main():
 
         try: 
             # converting frame from bgr to grey and detecting the face as well
-            face = face_detector(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), 1)[0]
+            #face = face_detector(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), 1)[0]
+            #frame = cv2.rectangle(frame, (500, 100), (900, 500), (0, 255, 0), 2)
+            #face = cv2.cvtColor(frame[100:500, 500:900], cv2.COLOR_BGR2GRAY)
 
-            predicted_emotion = detect_emotion(frame, face)
+            predicted_emotion = detect_emotion(frame)
             if prev_emotion != predicted_emotion:
                 print(predicted_emotion)
             prev_emotion = predicted_emotion

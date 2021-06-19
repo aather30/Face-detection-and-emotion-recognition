@@ -47,6 +47,10 @@ emotion_path = ""
 emotion_str = ""
 enter_text = ""
 
+left = 500
+top = 100
+right = 900
+bottom = 500
 # looping through every frame
 while True:
     # storing a single frame from the webcam and saving it in a variable
@@ -54,10 +58,10 @@ while True:
 
     try: 
         # converting frame from bgr to grey and detecting the face as well
-        face = face_detector(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), 1)[0]
+        #face = face_detector(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), 1)[0]
         
         # creating a boundary of the face detected
-        frame = cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 255, 0), 2)
+        frame = cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
 
         # showing menu on the screen
         cv2.putText(frame, "Select a number!", (10, 25),cv2.FONT_HERSHEY_SIMPLEX, 0.7,(255,255,255), 2)
@@ -88,7 +92,7 @@ while True:
         emotion_path = "../dataset/" + emotions[key - ord('0') - 1] + "/"
     elif key == 13 or key == 10:
         try:
-            gray_face = cv2.cvtColor(frame[face.top():face.bottom(), face.left():face.right()], cv2.COLOR_BGR2GRAY)
+            gray_face = cv2.cvtColor(frame[top:bottom, left:right], cv2.COLOR_BGR2GRAY)
             cv2.imwrite(emotion_path + str(len(os.listdir(emotion_path))) + ".jpg", gray_face)
 
         except Exception:
